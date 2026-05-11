@@ -1,1 +1,3 @@
+## Nama Proyek
+
 MyLibrary adalah aplikasi mobile multiplatform yang dirancang untuk mengelola koleksi buku atau film pribadi secara efisien . Dibangun menggunakan Kotlin Multiplatform (KMP) dan Compose Multiplatform, aplikasi ini menerapkan pola Clean Architecture (Data, Domain, Presentation) serta arsitektur MVVM .  Aplikasi ini mengintegrasikan REST API (seperti Google Books atau TMDB) menggunakan Ktor Client untuk pencarian data, serta menyediakan fitur offline-first dengan SQLDelight untuk penyimpanan koleksi lokal.
