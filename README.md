@@ -1,227 +1,247 @@
-# 💰 TabungIn
-> Aplikasi manajemen target tabungan berbasis mobile multiplatform
+# 📱 NoteAI - KMP Project Template
 
-![CI](https://github.com/[team-name]/tabungin/actions/workflows/ci.yml/badge.svg)
-![Kotlin](https://img.shields.io/badge/Kotlin-Multiplatform-7F52FF?logo=kotlin)
-![Compose](https://img.shields.io/badge/Compose-Multiplatform-4285F4)
-![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green)
+Template project **Kotlin Multiplatform** untuk mata kuliah **Pengembangan Aplikasi Mobile** di ITERA.
 
----
+Aplikasi Notes dengan fitur AI untuk membantu mahasiswa memahami arsitektur dan pattern yang digunakan dalam pengembangan aplikasi mobile modern.
 
-## 👥 Tim
-
-| Nama | NIM | GitHub | Role |
-|------|-----|--------|------|
-| [Falih Faiq Fadhlurrahman] | [123140129] | [@ScienceCom](https://github.com/ScienceCom) | Lead & Data Engineer |
-| [Khairul Rijal Syauqi] | [123140143] | [@32gz](https://github.com/32gz) | UI/UX & QA Developer |
-
----
-
-## 📱 Deskripsi Aplikasi
-
-**TabungIn** adalah aplikasi manajemen target tabungan berbasis mobile multiplatform yang dikembangkan menggunakan framework **Kotlin Multiplatform** dan **Compose Multiplatform** dengan menerapkan pola **Clean Architecture** serta **MVVM**.
-
-Aplikasi ini memfasilitasi pengguna untuk mencatat dan memantau progres celengan fisik secara digital melalui fitur CRUD yang didukung oleh **SQLDelight** untuk penyimpanan lokal, serta visualisasi data reaktif menggunakan **StateFlow**.
-
-Dengan sistem navigasi antarlayar yang mendukung argument passing, TabungIn juga mengintegrasikan **Gemini API** untuk asisten finansial cerdas serta fitur **Dark Mode** guna memberikan pengalaman pengguna yang modern, responsif, dan fungsional.
-
----
+> **📚 Dokumentasi Lengkap**
+> 
+> | Dokumen | Deskripsi |
+> |---------|-----------|
+> | [🚀 Cara Menjalankan](./docs/CARA_MENJALANKAN.md) | **BACA INI DULU!** Panduan setup dan running aplikasi |
+> | [📋 Panduan Project](./docs/PANDUAN_PROJECT.md) | Informasi lengkap tentang project, timeline, dan penilaian |
+> | [🌿 Git Workflow](./docs/GIT_WORKFLOW.md) | Cara menggunakan Git dan branching strategy |
+> | [📜 Aturan Modifikasi](./docs/ATURAN_MODIFIKASI.md) | Apa yang boleh dan tidak boleh dimodifikasi |
+> | [🏗️ Struktur Kode](./docs/STRUKTUR_KODE.md) | Penjelasan arsitektur dan struktur folder |
+> | [🔧 Troubleshooting](./docs/TROUBLESHOOTING.md) | Solusi untuk masalah umum |
 
 ## ✨ Fitur Aplikasi
 
-### ✅ Fitur Minimum
-- [ ] **Home Screen** — Tampilan total tabungan dan daftar target aktif dengan progress bar
-- [ ] **Target Detail Screen** — Detail target tabungan, riwayat setoran, dan sisa target
-- [ ] **Add/Edit Target Screen** — Form CRUD untuk membuat dan mengedit target tabungan
-- [ ] **Riwayat Screen** — Daftar semua transaksi setoran tabungan
-- [ ] **Settings Screen** — Pengaturan preferensi pengguna
-- [ ] **CRUD Target Tabungan** — Create, Read, Update, Delete target tabungan
-- [ ] **CRUD Setoran** — Catat setoran ke target tertentu
-- [ ] **Local Storage** — Semua data tersimpan offline menggunakan SQLDelight
-- [ ] **State Management** — StateFlow + MVVM pattern
-- [ ] **Navigation** — Multi-screen navigation dengan argument passing
-- [ ] **Unit Tests** — Minimal 10 unit tests, coverage > 50%
-- [ ] **UI Tests** — Minimal 3 UI tests
-- [ ] **Dependency Injection** — Koin DI setup
+- 📝 **CRUD Notes** - Tambah, edit, hapus, dan lihat catatan
+- 🔍 **Search & Filter** - Cari dan filter notes berdasarkan kategori
+- 🤖 **AI Assistant** - Summarize, generate ideas, improve writing
+- 🌙 **Dark Mode** - Tema gelap/terang
+- 📱 **Cross-Platform** - Android & iOS dari satu codebase
 
-### 🎁 Fitur Bonus (Target)
-- [ ] **Dark Mode** (+5%) — Support light/dark theme
-- [ ] **AI Integration** (+10%) — Asisten finansial menggunakan Gemini API
-- [ ] **Offline First** (+5%) — App berfungsi penuh tanpa koneksi internet
-- [ ] **Animations** (+5%) — Animasi progress bar dan transisi antar layar
-- [ ] **CI/CD** (+5%) — Automated build & test dengan GitHub Actions
-- [ ] **iOS Support** (+10%) — App berjalan di iOS simulator
+## 🏗️ Arsitektur & Teknologi
 
----
-
-## 🛠️ Tech Stack
-
-| Kategori | Teknologi |
-|----------|-----------|
-| Framework | Kotlin Multiplatform, Compose Multiplatform |
-| Architecture | MVVM, Clean Architecture, Repository Pattern |
-| Async | Coroutines, Flow, StateFlow |
-| Storage | SQLDelight (local DB), DataStore (preferences) |
-| Networking | Ktor Client (untuk Gemini API) |
-| DI | Koin |
-| AI | Google Gemini API |
-| Testing | kotlin.test, MockK, Turbine, Compose Test |
-| CI/CD | GitHub Actions |
-
----
-
-## 🏗️ Arsitektur
-
-TabungIn menggunakan **Clean Architecture** dengan 3 layer utama:
+### Clean Architecture + MVVM
 
 ```
-┌─────────────────────────────────────┐
-│        PRESENTATION LAYER           │
-│   UI (Composables) + ViewModels     │
-│          + UI State                 │
-├─────────────────────────────────────┤
-│           DOMAIN LAYER              │
-│   Use Cases + Domain Models +       │
-│      Repository Interfaces          │
-├─────────────────────────────────────┤
-│            DATA LAYER               │
-│  Repository Impl + Local (SQLDelight│
-│  + DataStore) + Remote (Ktor/Gemini)│
-└─────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                        │
+│  ┌───────────────┐        ┌───────────────┐                 │
+│  │    Screen     │◄──────►│   ViewModel   │                 │
+│  │  (Composable) │ State  │  (StateFlow)  │                 │
+│  └───────────────┘        └───────┬───────┘                 │
+└───────────────────────────────────┼─────────────────────────┘
+                                    │
+┌───────────────────────────────────┼─────────────────────────┐
+│                      DOMAIN LAYER │                          │
+│                    ┌──────────────▼──────────────┐          │
+│                    │         Use Cases           │          │
+│                    │    (Business Logic)         │          │
+│                    └──────────────┬──────────────┘          │
+│                    ┌──────────────▼──────────────┐          │
+│                    │    Repository Interface     │          │
+│                    └──────────────┬──────────────┘          │
+└───────────────────────────────────┼─────────────────────────┘
+                                    │
+┌───────────────────────────────────┼─────────────────────────┐
+│                       DATA LAYER  │                          │
+│                    ┌──────────────▼──────────────┐          │
+│                    │   Repository Implementation │          │
+│                    └──────────────┬──────────────┘          │
+│              ┌────────────────────┼────────────────────┐    │
+│              │                    │                    │    │
+│        ┌─────▼─────┐        ┌─────▼─────┐       ┌─────▼────┐│
+│        │  SQLDelight│        │   Ktor   │       │ DataStore││
+│        │  (Local)  │        │ (Remote) │       │  (Prefs) ││
+│        └───────────┘        └──────────┘       └──────────┘│
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Struktur Folder
+### Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **UI** | Compose Multiplatform, Material 3 |
+| **State** | StateFlow, ViewModel |
+| **Navigation** | Compose Navigation (Type-safe) |
+| **Networking** | Ktor Client |
+| **Local DB** | SQLDelight |
+| **Preferences** | DataStore |
+| **DI** | Koin |
+| **AI** | Google Gemini API |
+| **Testing** | Kotlin Test, Turbine |
+
+## 📁 Struktur Project
 
 ```
-composeApp/
-└── src/commonMain/kotlin/com/tabungin/app/
-    ├── App.kt                    # Entry point & NavHost
-    ├── di/                       # Koin modules
-    │   ├── AppModule.kt
-    │   ├── DataModule.kt
-    │   └── ViewModelModule.kt
-    ├── data/
-    │   ├── local/                # SQLDelight, DataStore
-    │   ├── remote/               # Ktor, Gemini API
-    │   ├── repository/           # Repository implementations
-    │   └── model/                # DTOs, Entities
-    ├── domain/
-    │   ├── model/                # Domain models (Target, Setoran)
-    │   ├── repository/           # Repository interfaces
-    │   └── usecase/              # Use cases
-    └── presentation/
-        ├── navigation/           # NavHost, Routes
-        ├── theme/                # Colors, Typography, Dark Mode
-        ├── components/           # Reusable composables
-        └── screens/
-            ├── home/             # HomeScreen + HomeViewModel
-            ├── detail/           # TargetDetailScreen + ViewModel
-            ├── add_edit/         # AddEditScreen + ViewModel
-            ├── riwayat/          # RiwayatScreen + ViewModel
-            └── settings/         # SettingsScreen + ViewModel
+composeApp/src/
+├── commonMain/kotlin/com/example/noteai/
+│   ├── core/                      # Core utilities
+│   │   ├── di/                    # Koin modules
+│   │   ├── network/               # Network config, error handling
+│   │   └── util/                  # Extensions, helpers
+│   │
+│   ├── data/                      # Data layer
+│   │   ├── local/
+│   │   │   ├── dao/               # SQLDelight DAOs
+│   │   │   ├── entity/            # Database entities
+│   │   │   └── datastore/         # DataStore preferences
+│   │   ├── remote/
+│   │   │   ├── api/               # API services (Ktor)
+│   │   │   └── dto/               # Data Transfer Objects
+│   │   └── repository/            # Repository implementations
+│   │
+│   ├── domain/                    # Domain layer (pure Kotlin)
+│   │   ├── model/                 # Domain models
+│   │   ├── repository/            # Repository interfaces
+│   │   └── usecase/               # Business logic
+│   │
+│   └── presentation/              # Presentation layer
+│       ├── navigation/            # Navigation setup
+│       ├── screens/               # Screen composables + ViewModels
+│       │   ├── home/
+│       │   ├── addnote/
+│       │   ├── detail/
+│       │   └── ai/
+│       ├── components/            # Reusable UI components
+│       └── theme/                 # Material theme
+│
+├── commonMain/sqldelight/         # SQLDelight schema
+│
+├── androidMain/kotlin/            # Android-specific (expect/actual)
+└── iosMain/kotlin/                # iOS-specific (expect/actual)
 ```
 
-### Domain Models
+## 🚀 Getting Started
 
-```kotlin
-data class Target(
-    val id: Long,
-    val nama: String,
-    val targetNominal: Double,
-    val terkumpul: Double,
-    val deadline: Long?,
-    val createdAt: Long
-)
+### Prerequisites
 
-data class Setoran(
-    val id: Long,
-    val targetId: Long,
-    val nominal: Double,
-    val catatan: String?,
-    val tanggal: Long
-)
-```
+- Android Studio Ladybug (2024.2.1) atau lebih baru
+- Xcode 15+ (untuk iOS)
+- JDK 17+
 
----
+### 👥 Ketentuan Kelompok
 
-## 🚀 Setup & Menjalankan Aplikasi
+| Ketentuan | Detail |
+|-----------|--------|
+| Jumlah Anggota | **1 - 3 mahasiswa** per kelompok |
+| Format Branch | `project/[NIM-NIM-...]-[NamaAplikasi]` |
 
-### Prasyarat
-- Android Studio Hedgehog atau yang lebih baru
-- JDK 17
-- Android SDK (min API 24)
-- *(Opsional untuk iOS)* Xcode 15+, macOS
+**Contoh Branch:**
+- Individu: `project/121140001-TodoMaster`
+- 2 orang: `project/121140003-121140004-FitnessApp`
+- 3 orang: `project/121140007-121140008-121140009-StudyPlanner`
 
-### Langkah-langkah
+### Setup
+
+1. **Fork & Clone repository**
+   ```bash
+   # 1 orang fork, lalu invite anggota lain sebagai collaborator
+   # Semua anggota clone dari repo yang di-fork
+   git clone https://github.com/USERNAME_FORK/Pryk-PAM.git
+   cd Pryk-PAM
+
+   # Buat branch project kelompok
+   git checkout -b project/121140003-121140004-FitnessApp
+   ```
+
+2. **Setup `local.properties`**
+
+   Salin template, lalu isi API key:
+   ```bash
+   cp local.properties.example local.properties
+   # edit local.properties dan isi GEMINI_API_KEY=...
+   ```
+
+   Dapatkan API key gratis di: https://aistudio.google.com/
+
+3. **Sync & Build**
+   ```bash
+   ./gradlew build              # build semua target
+   ./gradlew :composeApp:assembleDebug   # build APK debug saja (lebih cepat)
+   ```
+
+4. **Run**
+   - **Android**: pilih run configuration `composeApp` di Android Studio, atau
+     `./gradlew :composeApp:installDebug` ke emulator/device aktif.
+   - **iOS** (opsional): folder `iosApp/` belum disertakan di template ini —
+     lihat panduan di [`docs/CARA_MENJALANKAN.md`](./docs/CARA_MENJALANKAN.md#8-menjalankan-ios-lanjutan-opsional).
+
+## 📚 Materi yang Dicakup
+
+| Pertemuan | Topik | File/Folder Reference |
+|-----------|-------|----------------------|
+| 1 | Setup Environment | Root project setup |
+| 2 | Kotlin Lanjutan | `core/util/`, coroutines, Flow |
+| 3 | Compose Basics | `presentation/components/` |
+| 4 | MVVM & State | `presentation/screens/*/ViewModel.kt` |
+| 5 | Navigation | `presentation/navigation/` |
+| 6 | Networking | `data/remote/`, Ktor setup |
+| 7 | Local Storage | `data/local/`, SQLDelight |
+| 8 | Platform Code | `androidMain/`, `iosMain/`, expect/actual |
+| 9 | AI Integration | `data/remote/api/GeminiService.kt` |
+| 10 | Testing | `commonTest/` |
+
+## 🧪 Testing
 
 ```bash
-# 1. Clone repository
-git clone git clone https://github.com/ScienceCom/Proyek-Pengembangan-Aplikasi-Mobile.git
-cd Proyek-Pengembangan-Aplikasi-Mobile
+# Run all tests
+./gradlew allTests
 
-# 2. Buka di Android Studio
-# File > Open > pilih folder tabungin
-
-# 3. Sync Gradle
-# Klik "Sync Now" jika muncul notifikasi
-
-# 4. Jalankan di emulator / device Android
-# Run > Run 'composeApp'
+# Run common tests only
+./gradlew :composeApp:testDebugUnitTest
 ```
 
-### Konfigurasi API Key (untuk fitur AI)
+## 📝 Tugas Mahasiswa
 
-Buat file `local.properties` di root project dan tambahkan:
-```properties
-GEMINI_API_KEY=your_api_key_here
-```
+### Sprint 1: Foundation
+- [ ] Clone dan setup project
+- [ ] Pahami struktur folder
+- [ ] Modifikasi tema/warna
+
+### Sprint 2: Core Features
+- [ ] Tambahkan field baru di Note (misal: priority, dueDate)
+- [ ] Implementasi fitur kategori/tags
+- [ ] Tambahkan validasi input
+
+### Sprint 3: Advanced Features
+- [ ] Implementasi search dengan debounce
+- [ ] Tambahkan filter dan sort
+- [ ] Implementasi offline-first
+
+### Sprint 4: AI & Polish
+- [ ] Integrasikan fitur AI baru
+- [ ] UI polish dan animasi
+- [ ] Tambahkan unit tests
+
+### Sprint 5: Final
+- [ ] Bug fixes
+- [ ] Dokumentasi
+- [ ] Prepare demo
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Buat branch fitur (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buat Pull Request
+
+## 📄 License
+
+MIT License - silakan gunakan untuk pembelajaran.
+
+## 👨‍🏫 Dosen Pengampu
+### Pak Habib
+[GitHub: mh4Scripts](https://github.com/mh4Scripts)
+
+**Program Studi Teknik Informatika**  
+Institut Teknologi Sumatera (ITERA)
 
 ---
 
-## 🌿 Git Branching Strategy
-
-```
-main          ← Production-ready, protected branch
-  └── develop ← Integration branch
-        └── feature/[nama-fitur]  ← Feature branches
-```
-
-**Commit Convention:**
-```
-feat: add home screen with savings target list
-fix: resolve crash when target nominal is zero
-test: add unit tests for TargetRepository
-docs: update README with setup guide
-```
-
----
-
-## 📊 Sprint Plan
-
-| Sprint | Minggu | Target |
-|--------|--------|--------|
-| Sprint 1 | W11 | Planning, Setup, Arsitektur, CI/CD |
-| Sprint 2 | W12 | Core Features: CRUD Target & Setoran, Navigation |
-| Sprint 3 | W13 | Advanced: Gemini AI, Dark Mode, Statistics |
-| Sprint 4 | W14 | Polish, Bug Fixes, Testing |
-| Sprint 5 | W15 | Final Preparation & Demo Rehearsal |
-| UAS | W16 | Final Demo Day |
-
-Detail breakdown per sprint tersedia di [PROJECT_PLAN.md](./PROJECT_PLAN.md).
-
----
-
-## 📋 Deliverables Progress
-
-### Sprint 1 ✅
-- [x] GitHub repository setup dengan collaborators
-- [x] KMP project structure dengan Clean Architecture
-- [x] GitHub Actions CI (build + test passing)
-- [x] README.md komprehensif
-- [x] Project plan document
-
----
-
-## 📄 Lisensi
-
-Project ini dibuat untuk keperluan tugas akademik mata kuliah **Pengembangan Aplikasi Mobile** di Institut Teknologi Sumatera (ITERA).
+*Template ini dibuat untuk mendukung pembelajaran Pengembangan Aplikasi Mobile dengan Kotlin Multiplatform.*
