@@ -134,11 +134,10 @@ composeApp/src/
 
 | Nama | NIM | GitHub | Role |
 |------|-----|--------|------|
-| [Nama Anggota 1] | [NIM] | [@username1](https://github.com/username1) | Lead / Data Layer |
-| [Nama Anggota 2] | [NIM] | [@username2](https://github.com/username2) | Presentation / UI |
-| [Nama Anggota 3] | [NIM] | [@username3](https://github.com/username3) | QA / DevOps |
+| [Falih Faiq Fadhlurrahman] | [123140129] | [@ScienceCom](https://github.com/ScienceCom) | Lead & Data Engineer |
+| [Khairul Rijal Syauqi] | [123140143] | [@32gz](https://github.com/32gz) | UI/UX & QA Developer |
 
-**Branch:** `project/[NIM1]-[NIM2]-[NIM3]-TabungIn`
+**Branch:** `project/123140129-123140143-TabungIn`
 
 ## 🚀 Getting Started
 
@@ -156,7 +155,7 @@ composeApp/src/
    cd Proyek-Pengembangan-Aplikasi-Mobile
 
    # Checkout ke branch project kelompok
-   git checkout project/[NIM1]-[NIM2]-[NIM3]-TabungIn
+   git checkout project/123140129-123140143-TabungIn
    ```
 
 2. **Setup `local.properties`**
@@ -164,8 +163,6 @@ composeApp/src/
    cp local.properties.example local.properties
    # Edit local.properties, isi GEMINI_API_KEY
    ```
-
-   Dapatkan API key gratis di: https://aistudio.google.com/
 
 3. **Sync & Build**
    ```bash
@@ -178,7 +175,6 @@ composeApp/src/
      ```bash
      ./gradlew :composeApp:installDebug
      ```
-   - **iOS** (opsional): lihat panduan di [`docs/CARA_MENJALANKAN.md`](./docs/CARA_MENJALANKAN.md)
 
 ## 📅 Sprint Plan
 
