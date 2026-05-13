@@ -1,4 +1,4 @@
-# 📱 TabungIn - KMP Project
+# 💰 TabungIn - KMP Project
 
 Aplikasi **manajemen target tabungan** berbasis mobile multiplatform untuk mata kuliah **Pengembangan Aplikasi Mobile** di ITERA.
 
