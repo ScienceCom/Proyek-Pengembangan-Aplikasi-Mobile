@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-   branches: [ main, develop, "project/**" ]
+    branches: [ main, develop, "project/**" ]
   pull_request:
-    branches: [ main, develop, "project/**"]
+    branches: [ main, develop, "project/**" ]
 
 jobs:
   build-and-test:
@@ -25,32 +25,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Run unit tests
         run: ./gradlew :composeApp:testDebugUnitTest --no-daemon
+        env:
+          GEMINI_API_KEY: ${{ secrets.AIzaSyAJoPFVxOEhK86MCtscJAyVwYCd6PWv2hE }}
 
       - name: Build debug APK
         run: ./gradlew :composeApp:assembleDebug --no-daemon
         env:
           GEMINI_API_KEY: ${{ secrets.AIzaSyAJoPFVxOEhK86MCtscJAyVwYCd6PWv2hE }}
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: |
-            **/build/reports/tests/
-            **/build/test-results/
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
