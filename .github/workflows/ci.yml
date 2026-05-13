@@ -40,6 +40,8 @@ jobs:
 
       - name: Build debug APK
         run: ./gradlew :composeApp:assembleDebug --no-daemon
+        env:
+          GEMINI_API_KEY: ${{ secrets.AIzaSyAJoPFVxOEhK86MCtscJAyVwYCd6PWv2hE }}
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
