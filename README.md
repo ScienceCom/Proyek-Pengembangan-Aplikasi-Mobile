@@ -12,9 +12,8 @@
 
 | Nama | NIM | GitHub | Role |
 |------|-----|--------|------|
-| [Nama Anggota 1] | [NIM] | [@username1](https://github.com/username1) | Lead / Backend |
-| [Nama Anggota 2] | [NIM] | [@username2](https://github.com/username2) | Frontend / UI |
-| [Nama Anggota 3] | [NIM] | [@username3](https://github.com/username3) | QA / DevOps |
+| [Falih Faiq Fadhlurrahman] | [123140129] | [@ScienceCom](https://github.com/ScienceCom) | Lead & Data Engineer |
+| [Khairul Rijal Syauqi] | [123140143] | [@32gz](https://github.com/32gz) | UI/UX & QA Developer |
 
 ---
 
@@ -30,7 +29,7 @@ Dengan sistem navigasi antarlayar yang mendukung argument passing, TabungIn juga
 
 ## ✨ Fitur Aplikasi
 
-### ✅ Fitur Minimum (Wajib)
+### ✅ Fitur Minimum
 - [ ] **Home Screen** — Tampilan total tabungan dan daftar target aktif dengan progress bar
 - [ ] **Target Detail Screen** — Detail target tabungan, riwayat setoran, dan sisa target
 - [ ] **Add/Edit Target Screen** — Form CRUD untuk membuat dan mengedit target tabungan
