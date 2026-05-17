@@ -10,6 +10,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 
 /**
  * Unit Tests untuk NoteRepository
@@ -21,26 +25,33 @@ import kotlin.test.assertTrue
  * 4. Follow AAA pattern (Arrange, Act, Assert)
  */
 class FakeTargetRepository : TargetRepository {
-    private val targets  = mutableListOf<Target>()
-    private var nextId   = 1L
+    private val targetsFlow = MutableStateFlow<List<Target>>(emptyList())
+    private var nextId = 1L
 
-    override fun getAllTargets() = flowOf(targets.toList())
-    override fun getTargetById(id: Long) =
-        flowOf(targets.find { it.id == id })
+    // Langsung return StateFlow-nya agar ViewModel bisa terus memantau (observe) perubahan
+    override fun getAllTargets(): Flow<List<Target>> = targetsFlow
+
+    // Gunakan .map agar setiap ada perubahan di targetsFlow, getTargetById juga ikut update
+    override fun getTargetById(id: Long): Flow<Target?> =
+        targetsFlow.map { list -> list.find { it.id == id } }
 
     override suspend fun insertTarget(target: Target): Long {
         val t = target.copy(id = nextId++)
-        targets.add(t)
+        // 3. Gunakan .update untuk mengubah isi list sekaligus memicu emit (pemberitahuan) ke ViewModel
+        targetsFlow.update { currentList -> currentList + t }
         return t.id
     }
 
     override suspend fun updateTarget(target: Target) {
-        val idx = targets.indexOfFirst { it.id == target.id }
-        if (idx >= 0) targets[idx] = target
+        targetsFlow.update { currentList ->
+            currentList.map { if (it.id == target.id) target else it }
+        }
     }
 
     override suspend fun deleteTarget(id: Long) {
-        targets.removeAll { it.id == id }
+        targetsFlow.update { currentList ->
+            currentList.filterNot { it.id == id }
+        }
     }
 
     override fun getSetoranByTarget(targetId: Long) = flowOf(emptyList<com.example.tabungin.domain.model.Setoran>())

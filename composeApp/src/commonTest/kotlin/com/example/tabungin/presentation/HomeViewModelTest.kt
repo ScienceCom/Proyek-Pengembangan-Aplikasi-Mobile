@@ -73,11 +73,19 @@ class HomeViewModelTest {
             GetAllTargetsUseCase(repo),
             DeleteTargetUseCase(repo)
         )
-        vm.deleteTarget(id)
-        advanceUntilIdle()
+        vm.uiState.test {
+            // State awal setelah init: pastikan data berhasil masuk ke UI State
+            val initialState = awaitItem()
+            assertTrue(initialState.targets.any { it.id == id }, "Data harusnya ada di awal")
 
-        val state = vm.uiState.value
-        assertTrue(state.targets.none { it.id == id })
+            // Ambil aksi hapus target
+            vm.deleteTarget(id)
+
+            // Kita tunggu item/state perubahan berikutnya
+            val updatedState = awaitItem()
+            assertTrue(updatedState.targets.none { it.id == id }, "Data harusnya sudah terhapus dari uiState")
+
+            cancelAndIgnoreRemainingEvents()}
     }
 
     @Test
