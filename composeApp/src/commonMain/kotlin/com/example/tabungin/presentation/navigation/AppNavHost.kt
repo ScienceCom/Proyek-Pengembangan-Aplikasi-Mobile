@@ -19,7 +19,6 @@ fun AppNavHost(
         navController    = navController,
         startDestination = Routes.Home.route
     ) {
-        // ── Home ──────────────────────────────────────────
         composable(Routes.Home.route) {
             HomeScreen(
                 onNavigateToDetail  = { navController.navigate(Routes.Detail.createRoute(it)) },
@@ -29,7 +28,6 @@ fun AppNavHost(
             )
         }
 
-        // ── Detail ────────────────────────────────────────
         composable(
             route     = Routes.Detail.route,
             arguments = Routes.Detail.arguments
@@ -42,7 +40,6 @@ fun AppNavHost(
             )
         }
 
-        // ── AddEdit ───────────────────────────────────────
         composable(
             route     = Routes.AddEdit.route,
             arguments = Routes.AddEdit.arguments
@@ -54,7 +51,6 @@ fun AppNavHost(
             )
         }
 
-        // ── Riwayat ───────────────────────────────────────
         composable(Routes.Riwayat.route) {
             RiwayatScreen(
                 onNavigateBack      = { navController.popBackStack() },
@@ -62,7 +58,6 @@ fun AppNavHost(
             )
         }
 
-        // ── Settings ──────────────────────────────────────
         composable(Routes.Settings.route) {
             SettingsScreen(
                 onNavigateBack = { navController.popBackStack() }

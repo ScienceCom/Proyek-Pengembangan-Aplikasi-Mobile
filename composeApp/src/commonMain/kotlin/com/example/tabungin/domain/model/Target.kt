@@ -6,7 +6,7 @@ data class Target(
     val nama: String,
     val targetAmount: Double,
     val terkumpul: Double = 0.0,
-    val deadline: String,        // format: "yyyy-MM-dd"
+    val deadline: String,
     val icon: String = "🎯",
     val warna: String = "#4CAF50",
     val createdAt: String = "",

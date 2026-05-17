@@ -4,12 +4,6 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.example.tabungin.data.local.TabunginDatabase
 
-/**
- * iOS implementation of DatabaseDriverFactory
- * 
- * Menggunakan NativeSqliteDriver yang membungkus SQLite native iOS.
- * Database disimpan di Documents directory aplikasi.
- */
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
         return NativeSqliteDriver(

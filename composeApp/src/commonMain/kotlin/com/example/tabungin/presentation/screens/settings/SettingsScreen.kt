@@ -36,7 +36,6 @@ fun SettingsScreen(
         ) {
             Spacer(Modifier.height(8.dp))
 
-            // ── Profil ────────────────────────────────────
             SectionLabel("Profil")
             OutlinedTextField(
                 value         = uiState.namaUser,
@@ -50,7 +49,6 @@ fun SettingsScreen(
             Spacer(Modifier.height(8.dp))
             HorizontalDivider()
 
-            // ── Tampilan ──────────────────────────────────
             SectionLabel("Tampilan")
             SettingsToggleRow(
                 icon     = Icons.Default.DarkMode,
@@ -61,7 +59,6 @@ fun SettingsScreen(
             )
             HorizontalDivider()
 
-            // ── Notifikasi ────────────────────────────────
             SectionLabel("Notifikasi")
             SettingsToggleRow(
                 icon     = Icons.Default.Notifications,
@@ -72,7 +69,6 @@ fun SettingsScreen(
             )
             HorizontalDivider()
 
-            // ── Tentang ───────────────────────────────────
             SectionLabel("Tentang Aplikasi")
             ListItem(
                 headlineContent   = { Text("TabungIn") },

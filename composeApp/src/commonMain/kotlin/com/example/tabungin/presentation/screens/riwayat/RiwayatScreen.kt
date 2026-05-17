@@ -42,7 +42,6 @@ fun RiwayatScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            // ── Total card ────────────────────────────────
             Card(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
                 colors   = CardDefaults.cardColors(

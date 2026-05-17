@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS TargetEntity (
     updatedAt     TEXT    NOT NULL
 );
 
--- ─── Queries ─────────────────────────────────────────────────
 
 getAllTargets:
 SELECT

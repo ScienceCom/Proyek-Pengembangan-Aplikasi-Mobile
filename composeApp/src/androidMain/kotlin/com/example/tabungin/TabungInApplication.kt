@@ -7,11 +7,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 
-/**
- * Android Application class
- * 
- * Entry point untuk inisialisasi app-wide dependencies.
- */
 class TabungInApplication : Application() {
     
     override fun onCreate() {

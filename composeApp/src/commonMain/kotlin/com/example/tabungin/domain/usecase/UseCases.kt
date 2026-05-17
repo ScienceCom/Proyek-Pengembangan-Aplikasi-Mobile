@@ -7,7 +7,6 @@ import com.example.tabungin.domain.repository.TargetRepository
 import com.example.tabungin.domain.repository.WritingStyle
 import kotlinx.coroutines.flow.Flow
 
-// ── Target Use Cases ─────────────────────────────────────────
 
 class GetAllTargetsUseCase(private val repo: TargetRepository) {
     operator fun invoke(): Flow<List<Target>> = repo.getAllTargets()
@@ -39,7 +38,6 @@ class DeleteTargetUseCase(private val repo: TargetRepository) {
     suspend operator fun invoke(id: Long) = repo.deleteTarget(id)
 }
 
-// ── Setoran Use Cases ────────────────────────────────────────
 
 class GetSetoranByTargetUseCase(private val repo: TargetRepository) {
     operator fun invoke(targetId: Long): Flow<List<Setoran>> =

@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS SetoranEntity (
     FOREIGN KEY (targetId) REFERENCES TargetEntity(id) ON DELETE CASCADE
 );
 
--- ─── Queries ─────────────────────────────────────────────────
 
 getSetoranByTarget:
 SELECT * FROM SetoranEntity

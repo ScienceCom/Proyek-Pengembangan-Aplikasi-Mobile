@@ -25,34 +25,34 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-// ==================== NETWORK MODULE ====================
+
 
 val networkModule = module {
     single { HttpClientFactory.create(enableLogging = true) }
     singleOf(::GeminiService)
 }
 
-// ==================== DATABASE MODULE ====================
+
 
 val databaseModule = module {
     single { get<DatabaseDriverFactory>().createDriver() }
     single { TabunginDatabase(get()) }
 }
 
-// ==================== PREFERENCES MODULE ====================
+
 
 val preferencesModule = module {
     single { get<DataStoreFactory>().create() }
     single { UserPreferences(get()) }
 }
 
-// ==================== REPOSITORY MODULE ====================
+
 
 val repositoryModule = module {
     single<TargetRepository> { TargetRepositoryImpl(get()) }
 }
 
-// ==================== USE CASE MODULE ====================
+
 
 val useCaseModule = module {
     factory { GetAllTargetsUseCase(get()) }
@@ -66,7 +66,7 @@ val useCaseModule = module {
     factory { DeleteSetoranUseCase(get()) }
 }
 
-// ==================== VIEWMODEL MODULE ====================
+
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get()) }
@@ -76,7 +76,7 @@ val viewModelModule = module {
     viewModel { SettingsViewModel() }
 }
 
-// ==================== SHARED MODULES ====================
+
 
 val sharedModules = listOf(
     networkModule,
@@ -87,7 +87,7 @@ val sharedModules = listOf(
     viewModelModule
 )
 
-// ==================== INIT FUNCTION ====================
+
 
 fun commonModules(): List<Module> = listOf(
     databaseModule,
