@@ -2,7 +2,7 @@ package com.example.tabungin.core.util
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
-import com.example.tabungin.data.local.NoteDatabase
+import com.example.tabungin.data.local.TabunginDatabase
 
 /**
  * iOS implementation of DatabaseDriverFactory
@@ -13,7 +13,7 @@ import com.example.tabungin.data.local.NoteDatabase
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
         return NativeSqliteDriver(
-            schema = NoteDatabase.Schema,
+            schema = TabunginDatabase.Schema,
             name = "tabungin.db"
         )
     }

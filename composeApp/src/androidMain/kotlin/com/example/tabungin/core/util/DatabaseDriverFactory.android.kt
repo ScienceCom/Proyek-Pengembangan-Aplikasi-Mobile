@@ -3,7 +3,7 @@ package com.example.tabungin.core.util
 import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import com.example.tabungin.data.local.NoteDatabase
+import com.example.tabungin.data.local.TabunginDatabase
 
 /**
  * Android implementation of DatabaseDriverFactory
@@ -16,7 +16,7 @@ actual class DatabaseDriverFactory(
 ) {
     actual fun createDriver(): SqlDriver {
         return AndroidSqliteDriver(
-            schema = NoteDatabase.Schema,
+            schema = TabunginDatabase.Schema,
             context = context,
             name = "tabungin.db"
         )

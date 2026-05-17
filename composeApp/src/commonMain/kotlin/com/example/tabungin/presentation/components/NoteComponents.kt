@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,10 +27,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -38,221 +42,311 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.tabungin.domain.model.Note
-import com.example.tabungin.domain.model.NoteColor
+import com.example.tabungin.domain.model.Setoran
+import com.example.tabungin.domain.model.Target
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+
+// ── Helpers ──────────────────────────────────────────────────
+
+/** Format angka ke Rupiah: 5000000 → "Rp 5.000.000" */
+fun formatRupiah(amount: Double): String {
+    val formatted = amount.toLong().toString()
+        .reversed().chunked(3).joinToString(".").reversed()
+    return "Rp $formatted"
+}
+
+/**
+ * Parse hex color string ke Compose Color.
+ * Pure Kotlin — tidak butuh android.graphics.Color.
+ */
+fun parseHexColor(hex: String): Color {
+    return try {
+        val clean = hex.removePrefix("#")
+        val r = clean.substring(0, 2).toInt(16)
+        val g = clean.substring(2, 4).toInt(16)
+        val b = clean.substring(4, 6).toInt(16)
+        Color(r, g, b)
+    } catch (e: Exception) {
+        Color(0xFF4CAF50)
+    }
+}
+
+// ── SummaryCard ───────────────────────────────────────────────
 
 @Composable
-fun NoteCard(
-    note: Note,
-    onClick: () -> Unit,
-    onPinClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier
+fun SummaryCard(
+    totalTerkumpul: Double,
+    totalTarget: Double,
+    jumlahTarget: Int
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue = Color(note.color.hexValue),
-        label = "card_bg"
-    )
-    
+    val progres = if (totalTarget <= 0) 0f
+    else (totalTerkumpul / totalTarget).toFloat().coerceIn(0f, 1f)
+
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        modifier = Modifier.fillMaxWidth(),
+        colors   = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Text(
+                "Ringkasan Tabungan",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                formatRupiah(totalTerkumpul),
+                style      = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color      = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress   = { progres },
+                modifier   = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+            Spacer(Modifier.height(6.dp))
+            Row(
+                modifier              = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("${(progres * 100).toInt()}% tercapai",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("$jumlahTarget target aktif",
+                    style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+// ── TargetCard ────────────────────────────────────────────────
+
+@Composable
+fun TargetCard(
+    target: Target,
+    onClick: () -> Unit,
+    onDelete: () -> Unit
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    Card(
+        modifier  = Modifier.fillMaxWidth().clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+        Row(
+            modifier          = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier         = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(parseHexColor(target.warna).copy(alpha = 0.85f)),
+                contentAlignment = Alignment.Center
             ) {
+                Text(target.icon, style = MaterialTheme.typography.titleLarge)
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(target.nama,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    text = note.title.ifBlank { "Tanpa Judul" },
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    "${formatRupiah(target.terkumpul)} / ${formatRupiah(target.targetAmount)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
-                Row {
-                    IconButton(
-                        onClick = onPinClick,
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (note.isPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin,
-                            contentDescription = if (note.isPinned) "Lepas Pin" else "Pin",
-                            tint = if (note.isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-                    
-                    IconButton(
-                        onClick = onDeleteClick,
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Hapus",
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
+                Spacer(Modifier.height(6.dp))
+                LinearProgressIndicator(
+                    progress   = { target.progres },
+                    modifier   = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    color      = parseHexColor(target.warna)
+                )
+                Spacer(Modifier.height(2.dp))
+                Row(
+                    modifier              = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("${(target.progres * 100).toInt()}%",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = parseHexColor(target.warna))
+                    Text("⏰ ${target.deadline}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
-            
-            if (note.content.isNotBlank()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = note.preview,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            CategoryBadge(category = note.category.displayName)
-        }
-    }
-}
 
-@Composable
-fun CategoryBadge(
-    category: String,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 8.dp, vertical = 2.dp)
-    ) {
-        Text(
-            text = category,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
-        )
-    }
-}
-
-@Composable
-fun LoadingIndicator(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-@Composable
-fun EmptyState(
-    title: String,
-    message: String,
-    modifier: Modifier = Modifier,
-    icon: @Composable (() -> Unit)? = null
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        icon?.invoke()
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-fun ErrorState(
-    message: String,
-    onRetry: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Oops!",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.error
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text("Coba Lagi")
+            IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(Icons.Default.Delete, "Hapus",
+                    tint = MaterialTheme.colorScheme.error)
             }
         }
     }
-}
 
-@Composable
-fun ColorPickerRow(
-    selectedColor: NoteColor,
-    onColorSelected: (NoteColor) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        NoteColor.entries.forEach { color ->
-            val isSelected = color == selectedColor
-            val alpha by animateFloatAsState(
-                targetValue = if (isSelected) 1f else 0.6f,
-                label = "color_alpha"
-            )
-            
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .alpha(alpha)
-                    .clip(CircleShape)
-                    .background(Color(color.hexValue))
-                    .clickable { onColorSelected(color) }
-                    .then(
-                        if (isSelected) {
-                            Modifier.background(
-                                Color.Black.copy(alpha = 0.1f),
-                                CircleShape
-                            )
-                        } else Modifier
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title  = { Text("Hapus Target?") },
+            text   = { Text("\"${target.nama}\" dan semua setorannya akan dihapus permanen.") },
+            confirmButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false; onDelete() },
+                    colors  = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
                     )
+                ) { Text("Hapus") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("Batal") }
+            }
+        )
+    }
+}
+
+// ── ProgressCard ─────────────────────────────────────────────
+
+@Composable
+fun ProgressCard(target: Target) {
+    val accentColor = parseHexColor(target.warna)
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors   = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(target.icon, style = MaterialTheme.typography.displaySmall)
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    Text(target.nama,
+                        style      = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold)
+                    Text("⏰ Deadline: ${target.deadline}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer)
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+            LinearProgressIndicator(
+                progress   = { target.progres },
+                modifier   = Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(6.dp)),
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                color      = accentColor
             )
+            Spacer(Modifier.height(12.dp))
+
+            Row(
+                modifier              = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text("Terkumpul", style = MaterialTheme.typography.labelSmall)
+                    Text(formatRupiah(target.terkumpul),
+                        style      = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color      = accentColor)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Progres", style = MaterialTheme.typography.labelSmall)
+                    Text("${(target.progres * 100).toInt()}%",
+                        style      = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold)
+                }
+                Column(horizontalAlignment = Alignment.End) {
+                    Text("Sisa", style = MaterialTheme.typography.labelSmall)
+                    Text(formatRupiah(target.sisaTabungan),
+                        style      = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color      = if (target.tercapai) accentColor
+                        else MaterialTheme.colorScheme.error)
+                }
+            }
+
+            if (target.tercapai) {
+                Spacer(Modifier.height(12.dp))
+                Card(colors = CardDefaults.cardColors(containerColor = accentColor.copy(alpha = 0.15f))) {
+                    Text(
+                        "🎉 Target tercapai! Selamat menabung!",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        style    = MaterialTheme.typography.bodyMedium,
+                        color    = accentColor
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ── SetoranItem ───────────────────────────────────────────────
+
+@Composable
+fun SetoranItem(
+    setoran: Setoran,
+    showTargetNama: Boolean = false,
+    onDelete: () -> Unit,
+    onClick: (() -> Unit)? = null
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+    ) {
+        Row(
+            modifier          = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier         = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.tertiaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("💰", style = MaterialTheme.typography.titleMedium)
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                if (showTargetNama && setoran.targetNama.isNotEmpty()) {
+                    Text(
+                        setoran.targetNama,
+                        style      = MaterialTheme.typography.labelSmall,
+                        color      = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                Text(
+                    formatRupiah(setoran.amount),
+                    style      = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                if (setoran.catatan.isNotBlank()) {
+                    Text(setoran.catatan,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Text(setoran.tanggal,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+
+            // Delete hanya tampil di DetailScreen (bukan Riwayat)
+            if (onClick == null) {
+                IconButton(onClick = onDelete) {
+                    Icon(Icons.Default.Delete, "Hapus setoran",
+                        tint = MaterialTheme.colorScheme.error)
+                }
+            }
         }
     }
 }

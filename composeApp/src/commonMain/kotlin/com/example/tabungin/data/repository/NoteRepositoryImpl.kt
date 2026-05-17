@@ -3,97 +3,108 @@ package com.example.tabungin.data.repository
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
-import com.example.tabungin.data.local.NoteDatabase
+import com.example.tabungin.data.local.TabunginDatabase
 import com.example.tabungin.data.local.entity.toDomain
-import com.example.tabungin.data.local.entity.toDomainList
-import com.example.tabungin.data.local.entity.toEntityValues
-import com.example.tabungin.domain.model.Note
-import com.example.tabungin.domain.model.NoteCategory
-import com.example.tabungin.domain.repository.NoteRepository
+import com.example.tabungin.domain.model.Setoran
+import com.example.tabungin.domain.model.Target
+import com.example.tabungin.domain.repository.TargetRepository
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 
-class NoteRepositoryImpl(private val database: NoteDatabase) : NoteRepository {
-    
-    private val queries = database.noteQueries
-    
-    override fun getAllNotes(): Flow<List<Note>> {
-        return queries.getAllNotes()
+
+class TargetRepositoryImpl(
+    private val db: TabunginDatabase
+) : TargetRepository {
+
+    private val targetQueries   = db.targetQueries
+    private val setoranQueries  = db.setoranQueries
+
+    private fun now(): String =
+        Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .toString()
+
+    // ── Target ──────────────────────────────────────────────
+
+    override fun getAllTargets(): Flow<List<Target>> =
+        targetQueries.getAllTargets()
             .asFlow()
-            .mapToList(Dispatchers.Default)
-            .map { entities -> entities.toDomainList() }
-    }
-    
-    override fun getPinnedNotes(): Flow<List<Note>> {
-        return queries.getPinnedNotes()
+            .mapToList(Dispatchers.IO)
+            .map { list -> list.map { it.toDomain() } }
+
+    override fun getTargetById(id: Long): Flow<Target?> =
+        targetQueries.getTargetById(id)
             .asFlow()
-            .mapToList(Dispatchers.Default)
-            .map { entities -> entities.toDomainList() }
-    }
-    
-    override fun getNotesByCategory(category: NoteCategory): Flow<List<Note>> {
-        return queries.getNotesByCategory(category.name)
+            .mapToOneOrNull(Dispatchers.IO)
+            .map { it?.toDomain() }
+
+    override suspend fun insertTarget(target: Target): Long =
+        withContext(Dispatchers.IO) {
+            targetQueries.insertTarget(
+                nama         = target.nama,
+                targetAmount = target.targetAmount,
+                deadline     = target.deadline,
+                icon         = target.icon,
+                warna        = target.warna,
+                createdAt    = now(),
+                updatedAt    = now()
+            )
+            targetQueries.lastInsertRowId().executeAsOne()
+        }
+
+    override suspend fun updateTarget(target: Target) =
+        withContext(Dispatchers.IO) {
+            targetQueries.updateTarget(
+                nama         = target.nama,
+                targetAmount = target.targetAmount,
+                deadline     = target.deadline,
+                icon         = target.icon,
+                warna        = target.warna,
+                updatedAt    = now(),
+                id           = target.id
+            )
+        }
+
+    override suspend fun deleteTarget(id: Long) =
+        withContext(Dispatchers.IO) {
+            targetQueries.deleteTarget(id)
+        }
+
+    // ── Setoran ─────────────────────────────────────────────
+
+    override fun getSetoranByTarget(targetId: Long): Flow<List<Setoran>> =
+        setoranQueries.getSetoranByTarget(targetId)
             .asFlow()
-            .mapToList(Dispatchers.Default)
-            .map { entities -> entities.toDomainList() }
-    }
-    
-    override fun searchNotes(query: String): Flow<List<Note>> {
-        return queries.searchNotes(query, query)
+            .mapToList(Dispatchers.IO)
+            .map { list -> list.map { it.toDomain() } }
+
+    override fun getAllSetoran(): Flow<List<Setoran>> =
+        setoranQueries.getAllSetoran()
             .asFlow()
-            .mapToList(Dispatchers.Default)
-            .map { entities -> entities.toDomainList() }
-    }
-    
-    override fun getNoteById(id: Long): Flow<Note?> {
-        return queries.getNoteById(id)
-            .asFlow()
-            .mapToOneOrNull(Dispatchers.Default)
-            .map { entity -> entity?.toDomain() }
-    }
-    
-    override suspend fun insertNote(note: Note): Long = withContext(Dispatchers.Default) {
-        val values = note.toEntityValues()
-        queries.insertNote(
-            title = values.title,
-            content = values.content,
-            category = values.category,
-            color = values.color,
-            is_pinned = values.isPinned,
-            created_at = values.createdAt,
-            updated_at = values.updatedAt
-        )
-        queries.lastInsertId().executeAsOne()
-    }
-    
-    override suspend fun updateNote(note: Note) = withContext(Dispatchers.Default) {
-        val values = note.toEntityValues()
-        queries.updateNote(
-            id = note.id,
-            title = values.title,
-            content = values.content,
-            category = values.category,
-            color = values.color,
-            is_pinned = values.isPinned,
-            updated_at = Clock.System.now().toEpochMilliseconds()
-        )
-    }
-    
-    override suspend fun deleteNote(id: Long) = withContext(Dispatchers.Default) {
-        queries.deleteNoteById(id)
-    }
-    
-    override suspend fun togglePinNote(id: Long) = withContext(Dispatchers.Default) {
-        queries.togglePin(
-            id = id,
-            updated_at = Clock.System.now().toEpochMilliseconds()
-        )
-    }
-    
-    override suspend fun deleteNotes(ids: List<Long>) = withContext(Dispatchers.Default) {
-        queries.deleteNotesByIds(ids)
-    }
+            .mapToList(Dispatchers.IO)
+            .map { list -> list.map { it.toDomain() } }
+
+    override suspend fun insertSetoran(setoran: Setoran) =
+        withContext(Dispatchers.IO) {
+            setoranQueries.insertSetoran(
+                targetId  = setoran.targetId,
+                amount    = setoran.amount,
+                catatan   = setoran.catatan,
+                tanggal   = setoran.tanggal,
+                createdAt = now()
+            )
+        }
+
+    override suspend fun deleteSetoran(id: Long) =
+        withContext(Dispatchers.IO) {
+            setoranQueries.deleteSetoran(id)
+        }
 }

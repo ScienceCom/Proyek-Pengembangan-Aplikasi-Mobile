@@ -1,46 +1,56 @@
 package com.example.tabungin.data.local.entity
 
-import com.example.tabungin.data.local.NoteEntity
-import com.example.tabungin.domain.model.Note
-import com.example.tabungin.domain.model.NoteCategory
-import com.example.tabungin.domain.model.NoteColor
-import kotlinx.datetime.Instant
+import com.example.tabungin.data.local.GetAllTargets
+import com.example.tabungin.data.local.GetAllSetoran
+import com.example.tabungin.data.local.GetTargetById
+import com.example.tabungin.data.local.SetoranEntity
+import com.example.tabungin.domain.model.Setoran
+import com.example.tabungin.domain.model.Target
 
-fun NoteEntity.toDomain(): Note {
-    return Note(
-        id = id,
-        title = title,
-        content = content,
-        category = NoteCategory.fromString(category),
-        color = NoteColor.fromString(color),
-        isPinned = is_pinned == 1L,
-        createdAt = Instant.fromEpochMilliseconds(created_at),
-        updatedAt = Instant.fromEpochMilliseconds(updated_at)
-    )
-}
 
-data class NoteEntityValues(
-    val title: String,
-    val content: String,
-    val category: String,
-    val color: String,
-    val isPinned: Long,
-    val createdAt: Long,
-    val updatedAt: Long
+// ── Target mappers ───────────────────────────────────────────
+
+fun GetAllTargets.toDomain() = Target(
+    id           = id,
+    nama         = nama,
+    targetAmount = targetAmount,
+    terkumpul    = terkumpul,
+    deadline     = deadline,
+    icon         = icon,
+    warna        = warna,
+    createdAt    = createdAt,
+    updatedAt    = updatedAt
 )
 
-fun Note.toEntityValues(): NoteEntityValues {
-    return NoteEntityValues(
-        title = title,
-        content = content,
-        category = category.name,
-        color = color.name,
-        isPinned = if (isPinned) 1L else 0L,
-        createdAt = createdAt.toEpochMilliseconds(),
-        updatedAt = updatedAt.toEpochMilliseconds()
-    )
-}
+fun GetTargetById.toDomain() = Target(
+    id           = id,
+    nama         = nama,
+    targetAmount = targetAmount,
+    terkumpul    = terkumpul,
+    deadline     = deadline,
+    icon         = icon,
+    warna        = warna,
+    createdAt    = createdAt,
+    updatedAt    = updatedAt
+)
 
-fun List<NoteEntity>.toDomainList(): List<Note> {
-    return map { it.toDomain() }
-}
+// ── Setoran mappers ──────────────────────────────────────────
+
+fun GetAllSetoran.toDomain() = Setoran(
+    id          = id,
+    targetId    = targetId,
+    amount      = amount,
+    catatan     = catatan,
+    tanggal     = tanggal,
+    createdAt   = createdAt,
+    targetNama  = targetNama
+)
+
+fun SetoranEntity.toDomain() = Setoran(
+    id        = id,
+    targetId  = targetId,
+    amount    = amount,
+    catatan   = catatan,
+    tanggal   = tanggal,
+    createdAt = createdAt
+)
