@@ -72,6 +72,7 @@ fun parseHexColor(hex: String): Color {
     }
 }
 
+// ── SummaryCard ───────────────────────────────────────────────
 
 @Composable
 fun SummaryCard(
@@ -121,6 +122,7 @@ fun SummaryCard(
     }
 }
 
+// ── TargetCard ────────────────────────────────────────────────
 
 @Composable
 fun TargetCard(
@@ -208,6 +210,7 @@ fun TargetCard(
     }
 }
 
+// ── ProgressCard ─────────────────────────────────────────────
 
 @Composable
 fun ProgressCard(target: Target) {
@@ -284,6 +287,7 @@ fun ProgressCard(target: Target) {
     }
 }
 
+// ── SetoranItem ───────────────────────────────────────────────
 
 @Composable
 fun SetoranItem(
