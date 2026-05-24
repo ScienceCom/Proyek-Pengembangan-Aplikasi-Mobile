@@ -12,7 +12,7 @@ class UserPreferences(
     private val dataStore: DataStore<Preferences>
 ) {
 
-    
+
     private object Keys {
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val SORT_BY = stringPreferencesKey("sort_by")
@@ -50,19 +50,19 @@ class UserPreferences(
             prefs[Keys.DEFAULT_CATEGORY] = category
         }
     }
-    
+
 
     val showPreview: Flow<Boolean> = dataStore.data.map { prefs ->
         prefs[Keys.SHOW_PREVIEW] ?: true
     }
-    
+
 
     suspend fun setShowPreview(show: Boolean) {
         dataStore.edit { prefs ->
             prefs[Keys.SHOW_PREVIEW] = show
         }
     }
-    
+
 
     val isOnboardingCompleted: Flow<Boolean> = dataStore.data.map { prefs ->
         prefs[Keys.ONBOARDING_COMPLETED] ?: false
