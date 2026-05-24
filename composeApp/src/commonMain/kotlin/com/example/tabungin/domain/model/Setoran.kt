@@ -5,7 +5,7 @@ data class Setoran(
     val targetId: Long,
     val amount: Double,
     val catatan: String = "",
-    val tanggal: String,         // format: "yyyy-MM-dd"
+    val tanggal: String,
     val createdAt: String = "",
     val targetNama: String = ""
 )

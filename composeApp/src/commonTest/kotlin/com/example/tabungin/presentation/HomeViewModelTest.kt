@@ -25,15 +25,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-/**
- * Unit Tests untuk HomeViewModel
- * 
- * Testing Guidelines:
- * 1. Setup test dispatcher untuk control coroutines
- * 2. Gunakan Turbine untuk test StateFlow
- * 3. Test UI state transformations
- * 4. Test user actions
- */
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -64,24 +56,22 @@ class HomeViewModelTest {
 
     @Test
     fun `deleteTarget menghapus target dari uiState`() = runTest {
-        // Seed data langsung ke fake repo
+
         val id = repo.insertTarget(
             Target(nama = "Test", targetAmount = 1_000_000.0, deadline = "2025-12-31")
         )
-        // Re-create ViewModel agar init dipanggil ulang dengan data terbaru
+
         val vm = HomeViewModel(
             GetAllTargetsUseCase(repo),
             DeleteTargetUseCase(repo)
         )
         vm.uiState.test {
-            // State awal setelah init: pastikan data berhasil masuk ke UI State
+
             val initialState = awaitItem()
             assertTrue(initialState.targets.any { it.id == id }, "Data harusnya ada di awal")
 
-            // Ambil aksi hapus target
             vm.deleteTarget(id)
 
-            // Kita tunggu item/state perubahan berikutnya
             val updatedState = awaitItem()
             assertTrue(updatedState.targets.none { it.id == id }, "Data harusnya sudah terhapus dari uiState")
 
@@ -101,8 +91,6 @@ class HomeViewModelTest {
 
     @Test
     fun `clearError mengosongkan error di uiState`() = runTest {
-        // Paksa error dengan cara langsung test field via reflection tidak mudah di KMP;
-        // kita test bahwa clearError() tidak melempar exception
         assertFails { throw IllegalStateException("dummy") }
         viewModel.clearError()
         assertNull(viewModel.uiState.value.error)

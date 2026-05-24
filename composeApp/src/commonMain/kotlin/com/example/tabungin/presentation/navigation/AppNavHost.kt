@@ -6,10 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tabungin.presentation.screens.add_edit.AddEditScreen
+import com.example.tabungin.presentation.screens.ai.AIAssistantScreen
 import com.example.tabungin.presentation.screens.detail.DetailScreen
 import com.example.tabungin.presentation.screens.home.HomeScreen
 import com.example.tabungin.presentation.screens.riwayat.RiwayatScreen
 import com.example.tabungin.presentation.screens.settings.SettingsScreen
+import com.example.tabungin.presentation.screens.statistics.StatisticsScreen
 
 @Composable
 fun AppNavHost(
@@ -19,17 +21,17 @@ fun AppNavHost(
         navController    = navController,
         startDestination = Routes.Home.route
     ) {
-        // ── Home ──────────────────────────────────────────
         composable(Routes.Home.route) {
             HomeScreen(
                 onNavigateToDetail  = { navController.navigate(Routes.Detail.createRoute(it)) },
                 onNavigateToAddEdit = { navController.navigate(Routes.AddEdit.createRoute()) },
                 onNavigateToRiwayat  = { navController.navigate(Routes.Riwayat.route) },
-                onNavigateToSettings = { navController.navigate(Routes.Settings.route) }
+                onNavigateToSettings = { navController.navigate(Routes.Settings.route) },
+                onNavigateToAI = { navController.navigate(Routes.AI.route) },
+                onNavigateToStatistics = { navController.navigate(Routes.Statistics.route) }
             )
         }
 
-        // ── Detail ────────────────────────────────────────
         composable(
             route     = Routes.Detail.route,
             arguments = Routes.Detail.arguments
@@ -42,7 +44,6 @@ fun AppNavHost(
             )
         }
 
-        // ── AddEdit ───────────────────────────────────────
         composable(
             route     = Routes.AddEdit.route,
             arguments = Routes.AddEdit.arguments
@@ -54,7 +55,6 @@ fun AppNavHost(
             )
         }
 
-        // ── Riwayat ───────────────────────────────────────
         composable(Routes.Riwayat.route) {
             RiwayatScreen(
                 onNavigateBack      = { navController.popBackStack() },
@@ -62,9 +62,20 @@ fun AppNavHost(
             )
         }
 
-        // ── Settings ──────────────────────────────────────
         composable(Routes.Settings.route) {
             SettingsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.Statistics.route) {
+            StatisticsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.AI.route) {
+            AIAssistantScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
@@ -78,15 +89,15 @@ private fun createNavigationActions(navController: NavHostController): Navigatio
                 popUpTo(Route.Home) { inclusive = true }
             }
         }
-        
+
         override fun navigateToAddNote(noteId: Long?) {
             navController.navigate(Route.AddNote(noteId))
         }
-        
+
         override fun navigateToNoteDetail(noteId: Long) {
             navController.navigate(Route.NoteDetail(noteId))
         }
-        
+
         override fun navigateToAIAssistant(noteId: Long?, initialText: String?) {
             navController.navigate(Route.AIAssistant(noteId, initialText))
         }

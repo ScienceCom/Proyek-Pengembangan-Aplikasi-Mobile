@@ -15,6 +15,7 @@ import com.example.tabungin.presentation.screens.detail.DetailViewModel
 import com.example.tabungin.presentation.screens.home.HomeViewModel
 import com.example.tabungin.presentation.screens.riwayat.RiwayatViewModel
 import com.example.tabungin.presentation.screens.settings.SettingsViewModel
+import com.example.tabungin.presentation.screens.statistics.StatisticsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import org.koin.core.context.startKoin
@@ -25,34 +26,34 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-// ==================== NETWORK MODULE ====================
+
 
 val networkModule = module {
     single { HttpClientFactory.create(enableLogging = true) }
     singleOf(::GeminiService)
 }
 
-// ==================== DATABASE MODULE ====================
+
 
 val databaseModule = module {
     single { get<DatabaseDriverFactory>().createDriver() }
     single { TabunginDatabase(get()) }
 }
 
-// ==================== PREFERENCES MODULE ====================
+
 
 val preferencesModule = module {
     single { get<DataStoreFactory>().create() }
     single { UserPreferences(get()) }
 }
 
-// ==================== REPOSITORY MODULE ====================
+
 
 val repositoryModule = module {
     single<TargetRepository> { TargetRepositoryImpl(get()) }
 }
 
-// ==================== USE CASE MODULE ====================
+
 
 val useCaseModule = module {
     factory { GetAllTargetsUseCase(get()) }
@@ -66,17 +67,18 @@ val useCaseModule = module {
     factory { DeleteSetoranUseCase(get()) }
 }
 
-// ==================== VIEWMODEL MODULE ====================
+
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get()) }
     viewModel { (id: Long) -> DetailViewModel(id, get(), get(), get(), get()) }
     viewModel { params -> AddEditViewModel(params.getOrNull<Long>(), get(), get(), get()) }
     viewModel { RiwayatViewModel(get()) }
-    viewModel { SettingsViewModel() }
+    viewModel { SettingsViewModel(get()) }
+    viewModel { StatisticsViewModel(get(), get()) }
 }
 
-// ==================== SHARED MODULES ====================
+
 
 val sharedModules = listOf(
     networkModule,
@@ -87,7 +89,7 @@ val sharedModules = listOf(
     viewModelModule
 )
 
-// ==================== INIT FUNCTION ====================
+
 
 fun commonModules(): List<Module> = listOf(
     databaseModule,

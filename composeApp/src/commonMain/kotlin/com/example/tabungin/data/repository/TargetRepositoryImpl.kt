@@ -15,8 +15,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 
 
@@ -32,7 +30,7 @@ class TargetRepositoryImpl(
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .toString()
 
-    // ── Target ──────────────────────────────────────────────
+
 
     override fun getAllTargets(): Flow<List<Target>> =
         targetQueries.getAllTargets()
@@ -78,7 +76,7 @@ class TargetRepositoryImpl(
             targetQueries.deleteTarget(id)
         }
 
-    // ── Setoran ─────────────────────────────────────────────
+
 
     override fun getSetoranByTarget(targetId: Long): Flow<List<Setoran>> =
         setoranQueries.getSetoranByTarget(targetId)

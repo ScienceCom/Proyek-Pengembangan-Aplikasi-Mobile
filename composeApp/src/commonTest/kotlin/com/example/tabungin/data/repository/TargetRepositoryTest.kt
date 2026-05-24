@@ -15,29 +15,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
-/**
- * Unit Tests untuk NoteRepository
- * 
- * Testing Guidelines:
- * 1. Gunakan FakeRepository untuk isolasi
- * 2. Test satu behavior per test
- * 3. Gunakan Turbine untuk test Flow
- * 4. Follow AAA pattern (Arrange, Act, Assert)
- */
 class FakeTargetRepository : TargetRepository {
     private val targetsFlow = MutableStateFlow<List<Target>>(emptyList())
     private var nextId = 1L
 
-    // Langsung return StateFlow-nya agar ViewModel bisa terus memantau (observe) perubahan
     override fun getAllTargets(): Flow<List<Target>> = targetsFlow
 
-    // Gunakan .map agar setiap ada perubahan di targetsFlow, getTargetById juga ikut update
     override fun getTargetById(id: Long): Flow<Target?> =
         targetsFlow.map { list -> list.find { it.id == id } }
 
     override suspend fun insertTarget(target: Target): Long {
         val t = target.copy(id = nextId++)
-        // 3. Gunakan .update untuk mengubah isi list sekaligus memicu emit (pemberitahuan) ke ViewModel
         targetsFlow.update { currentList -> currentList + t }
         return t.id
     }

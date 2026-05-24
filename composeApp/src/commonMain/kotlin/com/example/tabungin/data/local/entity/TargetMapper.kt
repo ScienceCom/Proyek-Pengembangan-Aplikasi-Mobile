@@ -8,7 +8,6 @@ import com.example.tabungin.domain.model.Setoran
 import com.example.tabungin.domain.model.Target
 
 
-// ── Target mappers ───────────────────────────────────────────
 
 fun GetAllTargets.toDomain() = Target(
     id           = id,
@@ -34,7 +33,6 @@ fun GetTargetById.toDomain() = Target(
     updatedAt    = updatedAt
 )
 
-// ── Setoran mappers ──────────────────────────────────────────
 
 fun GetAllSetoran.toDomain() = Setoran(
     id          = id,
