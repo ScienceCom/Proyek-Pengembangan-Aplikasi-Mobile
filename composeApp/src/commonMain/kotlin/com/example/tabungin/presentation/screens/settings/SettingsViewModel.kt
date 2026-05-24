@@ -50,12 +50,9 @@ class SettingsViewModel(
         // TODO: Implement notification scheduling if needed
     }
 
-    // Fungsi ini dipanggil dari TextField di UI
     fun onNamaUserChange(name: String) {
-        // 1. Update UI secara instan agar ngetik gak lag
         _uiState.update { it.copy(namaUser = name) }
 
-        // 2. Simpan secara permanen ke DataStore
         viewModelScope.launch {
             userPreferences.setNamaUser(name)
         }
