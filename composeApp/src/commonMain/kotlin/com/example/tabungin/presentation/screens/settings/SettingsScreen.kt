@@ -29,6 +29,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -138,8 +139,10 @@ fun SettingsScreen(
             // Profile Section
             SettingsSection(title = "Profil") {
                 OutlinedTextField(
-                    value = uiState.namaUser,
-                    onValueChange = viewModel::onNamaUserChange,
+                    value = state.namaUser,
+                    onValueChange = { newName ->
+                        viewModel.onNamaUserChange(newName)
+                    },
                     label = { Text("Nama Pengguna") },
                     placeholder = { Text("Masukkan nama kamu") },
                     leadingIcon = {

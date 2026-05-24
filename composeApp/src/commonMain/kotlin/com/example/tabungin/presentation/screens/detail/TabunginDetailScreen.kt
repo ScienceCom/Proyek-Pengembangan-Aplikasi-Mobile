@@ -26,11 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.tabungin.core.util.formatToDisplay
 import com.example.tabungin.presentation.components.ProgressCard
 import com.example.tabungin.presentation.components.SetoranItem
-import com.example.tabungin.presentation.components.formatRupiah
 import com.example.tabungin.presentation.components.parseHexColor
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf

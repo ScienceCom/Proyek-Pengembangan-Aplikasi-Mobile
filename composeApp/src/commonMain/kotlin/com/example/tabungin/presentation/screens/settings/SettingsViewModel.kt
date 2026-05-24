@@ -22,8 +22,17 @@ class SettingsViewModel(
     init {
         // Observe preferences from DataStore
         viewModelScope.launch {
-            userPreferences.isDarkMode.collect { isDark ->
-                _uiState.update { it.copy(isDarkMode = isDark) }
+            // Ambil data Dark Mode
+            launch {
+                userPreferences.isDarkMode.collect { isDark ->
+                    _uiState.update { it.copy(isDarkMode = isDark) }
+                }
+            }
+            // Ambil data Nama User dari DataStore saat aplikasi pertama dibuka
+            launch {
+                userPreferences.namaUser.collect { name ->
+                    _uiState.update { it.copy(namaUser = name) }
+                }
             }
         }
     }
@@ -32,7 +41,7 @@ class SettingsViewModel(
         viewModelScope.launch {
             val newValue = !_uiState.value.isDarkMode
             userPreferences.setDarkMode(newValue)
-            _uiState.update { it.copy(isDarkMode = newValue) }
+            // Hapus update manual UI State di sini jika flow isDarkMode di atas sudah otomatis trigger
         }
     }
 
@@ -41,8 +50,14 @@ class SettingsViewModel(
         // TODO: Implement notification scheduling if needed
     }
 
+    // Fungsi ini dipanggil dari TextField di UI
     fun onNamaUserChange(name: String) {
+        // 1. Update UI secara instan agar ngetik gak lag
         _uiState.update { it.copy(namaUser = name) }
-        // TODO: Save to preferences if needed
+
+        // 2. Simpan secara permanen ke DataStore
+        viewModelScope.launch {
+            userPreferences.setNamaUser(name)
+        }
     }
 }
