@@ -424,11 +424,6 @@ fun SettingsScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             InfoItem(
-                                icon = Icons.Default.Code,
-                                label = "Sprint",
-                                value = "2"
-                            )
-                            InfoItem(
                                 icon = Icons.Default.School,
                                 label = "Mata Kuliah",
                                 value = "PAM"
