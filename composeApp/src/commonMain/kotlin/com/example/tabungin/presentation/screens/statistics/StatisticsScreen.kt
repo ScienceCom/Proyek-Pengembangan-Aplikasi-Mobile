@@ -98,8 +98,8 @@ fun StatisticsScreen(
                                 .background(
                                     brush = Brush.horizontalGradient(
                                         colors = listOf(
-                                            Color(0xFF6750A4),
-                                            Color(0xFF9C27B0)
+                                            Color(0xFF4CAF50),
+                                            Color(0xFFACE8B0)
                                         )
                                     )
                                 )
@@ -288,7 +288,7 @@ fun StatisticsScreen(
                         icon = Icons.Default.TrendingUp,
                         label = "Rata-rata",
                         value = formatRupiah(uiState.rataRataTabungan),
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = Color(0xFF388E3C)
                     )
 
                     StatCard(
@@ -433,8 +433,9 @@ private fun StatCard(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -442,7 +443,7 @@ private fun StatCard(
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = color.copy(alpha = 0.15f),
+                color = color.copy(alpha = 0.2f),
                 modifier = Modifier.size(48.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -450,7 +451,7 @@ private fun StatCard(
                         icon,
                         contentDescription = null,
                         tint = color,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(28.dp)
                     )
                 }
             }
@@ -461,7 +462,7 @@ private fun StatCard(
                 value,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = color
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
