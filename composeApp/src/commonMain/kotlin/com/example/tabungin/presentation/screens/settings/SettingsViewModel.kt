@@ -1,5 +1,6 @@
 package com.example.tabungin.presentation.screens.settings
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tabungin.data.local.datastore.UserPreferences
@@ -20,7 +21,8 @@ data class SettingsUiState(
 
 class SettingsViewModel(
     private val userPreferences: UserPreferences,
-    private val notificationService: NotificationService? = null
+    private val notificationService: NotificationService? = null,
+    private val sharedPrefs: SharedPreferences? = null
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -37,6 +39,8 @@ class SettingsViewModel(
             launch {
                 userPreferences.namaUser.collect { name ->
                     _uiState.update { it.copy(namaUser = name) }
+                    // Save to SharedPreferences for NotificationReceiver
+                    sharedPrefs?.edit()?.putString("nama_user", name)?.apply()
                 }
             }
             launch {
@@ -46,16 +50,23 @@ class SettingsViewModel(
                     if (aktif) {
                         val jam = _uiState.value.notifikasiJam
                         val menit = _uiState.value.notifikasiMenit
-                        val nama = _uiState.value.namaUser
                         notificationService?.scheduleDailyReminder(jam, menit)
+                        // Also save to SharedPreferences
+                        sharedPrefs?.edit()
+                            ?.putBoolean("notifikasi_aktif", true)
+                            ?.putInt("notifikasi_jam", jam)
+                            ?.putInt("notifikasi_menit", menit)
+                            ?.apply()
                     } else {
                         notificationService?.cancelDailyReminder()
+                        sharedPrefs?.edit()?.putBoolean("notifikasi_aktif", false)?.apply()
                     }
                 }
             }
             launch {
                 userPreferences.notifikasiJam.collect { jam ->
                     _uiState.update { it.copy(notifikasiJam = jam) }
+                    sharedPrefs?.edit()?.putInt("notifikasi_jam", jam)?.apply()
                     // Reschedule if notifications are enabled
                     if (_uiState.value.notifikasiAktif) {
                         notificationService?.scheduleDailyReminder(jam, _uiState.value.notifikasiMenit)
@@ -65,6 +76,7 @@ class SettingsViewModel(
             launch {
                 userPreferences.notifikasiMenit.collect { menit ->
                     _uiState.update { it.copy(notifikasiMenit = menit) }
+                    sharedPrefs?.edit()?.putInt("notifikasi_menit", menit)?.apply()
                     // Reschedule if notifications are enabled
                     if (_uiState.value.notifikasiAktif) {
                         notificationService?.scheduleDailyReminder(_uiState.value.notifikasiJam, menit)

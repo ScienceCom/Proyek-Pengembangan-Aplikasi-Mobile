@@ -1,5 +1,7 @@
 package com.example.tabungin.core.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.example.tabungin.core.util.DatabaseDriverFactory
 import com.example.tabungin.data.local.datastore.DataStoreFactory
 import com.example.tabungin.notification.AlarmScheduler
@@ -13,4 +15,7 @@ val androidModule = module {
     single { DataStoreFactory(androidContext()) }
     single { AlarmScheduler(androidContext()) }
     single<NotificationService> { NotificationServiceImpl(androidContext(), get()) }
+    single<SharedPreferences> {
+        androidContext().getSharedPreferences("tabungin_notif_prefs", Context.MODE_PRIVATE)
+    }
 }

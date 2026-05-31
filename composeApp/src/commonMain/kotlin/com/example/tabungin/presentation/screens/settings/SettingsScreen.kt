@@ -132,7 +132,7 @@ fun SettingsScreen(
                                 brush = Brush.horizontalGradient(
                                     colors = listOf(
                                         MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.tertiary
+                                        MaterialTheme.colorScheme.secondary
                                     )
                                 )
                             )

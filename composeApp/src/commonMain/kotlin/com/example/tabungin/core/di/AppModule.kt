@@ -28,7 +28,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
-
+import kotlin.coroutines.EmptyCoroutineContext.get
 
 
 val networkModule = module {
@@ -81,9 +81,9 @@ val viewModelModule = module {
     viewModel { (id: Long) -> DetailViewModel(id, get(), get(), get(), get(), get(), get()) }
     viewModel { params -> AddEditViewModel(params.getOrNull<Long>(), get(), get(), get()) }
     viewModel { RiwayatViewModel(get()) }
-    viewModel { SettingsViewModel(get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get()) }
     viewModel { StatisticsViewModel(get(), get()) }
-    viewModel { AIAssistantViewModel(get(), get(), get(), get(), get()) }
+    viewModel { AIAssistantViewModel(get(), get()) }
 }
 
 
