@@ -222,7 +222,6 @@ composeApp/src/
 
 ### Sprint 5: Final
 - [ ] Aplikasi stabil tanpa crash
-- [ ] Slide presentasi siap
 - [ ] Signed APK/AAB dibuat
 - [ ] README final diperbarui
 - [ ] Video backup demo
