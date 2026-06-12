@@ -236,6 +236,12 @@ composeApp/src/
 ./gradlew :composeApp:testDebugUnitTest
 ```
 
+Hasil Testing: 
+<img src="cov.png" width="400" />
+<img src="cov2.png" width="400" />
+
+---
+
 ## 📄 License
 
 MIT License - dibuat untuk keperluan pembelajaran.
