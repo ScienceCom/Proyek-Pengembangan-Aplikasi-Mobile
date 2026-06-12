@@ -150,7 +150,6 @@ composeApp/src/
 
 - Android Studio Ladybug (2024.2.1) atau lebih baru
 - JDK 17+
-- Xcode 15+ (untuk iOS, opsional)
 
 ### Setup
 
