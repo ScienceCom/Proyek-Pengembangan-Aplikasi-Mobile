@@ -247,7 +247,7 @@ Hasil Testing:
 ## Link Video Demo Final
 
 
-[Youtube:](https://youtu.be/hQBxHotBzzA)
+[Link Video Demo](https://youtu.be/hQBxHotBzzA)
 
 ---
 
