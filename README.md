@@ -89,7 +89,7 @@ composeApp/src/
 │   ├── domain/                            # Domain layer (pure Kotlin)
 │   │   ├── model/                         # Target, Setoran
 │   │   ├── repository/                    # TargetRepository, AIRepository interfaces
-│   │   └── usecase/                       # Business logic
+│   │   └── usecase/                       # Business logic, UseCases
 │   │
 │   └── presentation/                      # Presentation layer
 │       ├── navigation/                    # Routes.kt, AppNavHost.kt
@@ -115,6 +115,8 @@ composeApp/src/
 │       │   └── TargetRepositoryTest.kt
 │       └── presentation/
 │           └── HomeViewModelTest.kt
+│           └── AddEditViewModelTest.kt
+│           └── StatisticsViewModelTest.kt
 │
 ├── androidMain/kotlin/                    # Android-specific (expect/actual)
 │   └── com/example/tabungin/
