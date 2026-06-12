@@ -237,8 +237,10 @@ composeApp/src/
 ```
 
 Hasil Testing: 
-<img src="cov.png" width="400" />
-<img src="cov2.png" width="400" />
+
+
+<img src="cov.png" width="600" />
+<img src="cov2.png" width="600" />
 
 ---
 
