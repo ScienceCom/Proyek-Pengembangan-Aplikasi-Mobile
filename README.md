@@ -242,6 +242,12 @@ Hasil Testing:
 
 <img src="cov.png" width="600" />
 <img src="cov2.png" width="600" />
+---
+
+## Link Video Demo Final
+
+
+[Youtube:](https://youtu.be/hQBxHotBzzA)
 
 ---
 
