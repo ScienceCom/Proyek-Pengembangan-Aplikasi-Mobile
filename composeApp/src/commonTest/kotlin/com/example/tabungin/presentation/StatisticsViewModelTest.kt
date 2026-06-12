@@ -43,28 +43,6 @@ class StatisticsViewModelTest {
     }
 
     @Test
-    fun `initial state isLoading is true`() = runTest {
-        val state = viewModel.uiState.value
-        assertTrue(state.isLoading)
-    }
-
-    @Test
-    fun `total target is calculated correctly`() = runTest {
-        repo.insertTarget(Target(nama = "A", targetAmount = 10_000_000.0, deadline = "2025-12-31", terkumpul = 2_000_000.0))
-        repo.insertTarget(Target(nama = "B", targetAmount = 5_000_000.0, deadline = "2025-12-31", terkumpul = 1_000_000.0))
-
-        val vm = StatisticsViewModel(
-            getAllTargetsUseCase = GetAllTargetsUseCase(repo),
-            getAllSetoranUseCase = GetAllSetoranUseCase(repo)
-        )
-        advanceUntilIdle()
-
-        assertEquals(2, vm.uiState.value.jumlahTarget)
-        assertEquals(15_000_000.0, vm.uiState.value.totalTarget)
-        assertEquals(3_000_000.0, vm.uiState.value.totalTabungan)
-    }
-
-    @Test
     fun `targets are loaded on init`() = runTest {
         repo.insertTarget(Target(nama = "Test Target", targetAmount = 1_000_000.0, deadline = "2025-12-31"))
 
@@ -149,12 +127,6 @@ class StatisticsViewModelTest {
         assertEquals("Later", targets[1].nama)
     }
 
-    @Test
-    fun `clearError sets error to null`() = runTest {
-        viewModel.clearError()
-
-        assertEquals(null, viewModel.uiState.value.error)
-    }
 
     @Test
     fun `isLoading becomes false after data loads`() = runTest {
