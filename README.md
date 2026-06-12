@@ -12,7 +12,6 @@ TabungIn memfasilitasi pengguna untuk mencatat dan memantau progres celengan fis
 - 📊 **Progress Visual** — Progress bar reaktif menampilkan persentase pencapaian
 - 🤖 **AI Asisten Finansial** — Tips menabung dan saran perencanaan keuangan via Gemini API
 - 🌙 **Dark Mode** — Tema gelap/terang
-- 📱 **Cross-Platform** — Android & iOS dari satu codebase
 
 ## 🏗️ Arsitektur & Teknologi
 
