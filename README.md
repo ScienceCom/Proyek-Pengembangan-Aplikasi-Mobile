@@ -189,7 +189,7 @@ composeApp/src/
 | 12 | Sprint 2: Core Features | 5 screens, navigation, CRUD, SQLDelight | 5% |
 | 13 | Sprint 3: Advanced | Gemini AI, Dark Mode, animasi progress bar | 5% |
 | 14 | Sprint 4: Polish | Bug fixes, UI polish, 10+ tests, coverage | 5% |
-| 15 | Sprint 5: Final | Demo ready, slide, signed APK, README | 5% |
+| 15 | Sprint 5: Final | Demo ready, signed APK, README | 5% |
 | 16 | UAS | Demo | 35% |
 
 ## 📝 Tugas Mahasiswa
